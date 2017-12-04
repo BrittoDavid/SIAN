@@ -12,13 +12,13 @@ public class Main extends javax.swing.JFrame {
     static int opcion = 5;
     static boolean abrir = true;
     
-    //Creamos las ventanas
     
-        Events_main evento = new Events_main();
+    
+        
         
 
         // Llamamos la imagen de fondo 
-        public InputStream foto = this.getClass().getResourceAsStream("/imagenes/principal_foto.png");
+        public InputStream foto = this.getClass().getResourceAsStream("/Img/principal_foto.png");
 
     public Main() {
         initComponents();
@@ -223,11 +223,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenu1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MousePressed
         
-        if (abrir == true || evento.isVisible() == false) {
-            escritorioAdmin.add(evento);
-            evento.show();
-            abrir = false;
-        }
+       
     }//GEN-LAST:event_jMenu1MousePressed
 
     public static void main(String args[]) {
