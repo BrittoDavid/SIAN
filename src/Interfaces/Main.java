@@ -18,7 +18,7 @@ public class Main extends javax.swing.JFrame {
         
 
         // Llamamos la imagen de fondo 
-        public InputStream foto = this.getClass().getResourceAsStream("/imagenes/principal_foto.png");
+        public InputStream foto = this.getClass().getResourceAsStream("/Img/principal_foto.png");
 
     public Main() {
         initComponents();
