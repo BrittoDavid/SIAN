@@ -1,7 +1,6 @@
 
 package Interfaces;
-
-import Interfaces.Resources.ConexionBD;
+import Resources.ConnectionDB;
 import java.awt.event.ItemEvent;
 import java.sql.*;
 import java.util.logging.Level;
@@ -16,14 +15,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class NotesXSubjects extends javax.swing.JInternalFrame {
 DefaultTableModel modelo;
-ConexionBD cone;
+ConnectionDB cone;
 int flag=0;
 
 static int id_user=5;   
 
 public NotesXSubjects() {
         initComponents();
-        cone=new ConexionBD();
+        cone=new ConnectionDB();
         ComboBoxCourse();
         ComboBoxPeriod();
         lbName();
@@ -33,7 +32,7 @@ public NotesXSubjects() {
     }   
     public void lbName(){
           
-    ResultSet rs = cone.consultaBD("SELECT person.NAME ,teacher.ID_TEACHER FROM  teacher INNER "
+    ResultSet rs = cone.queryDB("SELECT person.NAME ,teacher.ID_TEACHER FROM  teacher INNER "
             + "JOIN person ON person.ID_PERSON = teacher.ID_PERSON WHERE teacher.ID_teacher="+id_user+""); 
          try{
              if(rs.next()){
@@ -47,8 +46,8 @@ public NotesXSubjects() {
    
     public void ComboBoxCourse(){    
         
-     ConexionBD cone2=new ConexionBD();    
-     ResultSet rs = cone2.consultaBD("SELECT courses.NAME_COURSES ,courses.ID_COURSES FROM"
+     ConnectionDB cone2=new ConnectionDB();    
+     ResultSet rs = cone2.queryDB("SELECT courses.NAME_COURSES ,courses.ID_COURSES FROM"
              + " courses INNER JOIN teachersxsubjectsxcourses on courses.ID_COURSES=teachersxsubjectsxcourses.ID_COURSES WHERE teachersxsubjectsxcourses.ID_TEACHERS="+id_user);
              
              
@@ -64,13 +63,13 @@ public NotesXSubjects() {
      flag=0;  
      cboCodeSubjects.removeAllItems();
      cboCodeSubjects.addItem("<Seleccione>");
-     ConexionBD cone2=new ConexionBD();
+     ConnectionDB cone2=new ConnectionDB();
      
      String dato=cboCodeCourse.getSelectedItem().toString();
         String dividido[]=dato.split(" - ");
         String idCourse=dividido[0];
      
-     ResultSet rs = cone2.consultaBD("SELECT subject.NAME_SUBJECT FROM teachersxsubjectsxcourses INNER JOIN "
+     ResultSet rs = cone2.queryDB("SELECT subject.NAME_SUBJECT FROM teachersxsubjectsxcourses INNER JOIN "
              + "subject on  teachersxsubjectsxcourses.ID_SUBJECT = subject.ID_SUBJECT WHERE "
              + "teachersxsubjectsxcourses.ID_TEACHERS="+id_user
              + " AND teachersxsubjectsxcourses.ID_COURSES="+idCourse);
@@ -88,8 +87,8 @@ public NotesXSubjects() {
      
     public void ComboBoxPeriod(){    
   
-    ConexionBD cone3=new ConexionBD();
-     ResultSet rs = cone3.consultaBD("SELECT * FROM period");
+    ConnectionDB cone3=new ConnectionDB();
+     ResultSet rs = cone3.queryDB("SELECT * FROM period");
      
         try {
             while (rs.next()) {
@@ -104,7 +103,7 @@ public NotesXSubjects() {
     }
    
     public void buscar(String valor){
-            ResultSet rs = cone.consultaBD("SELECT name FROM person WHERE ID_PERSON LIKE '%"+valor+"%'");
+            ResultSet rs = cone.queryDB("SELECT name FROM person WHERE ID_PERSON LIKE '%"+valor+"%'");
             
         }
   
@@ -116,9 +115,9 @@ public NotesXSubjects() {
         int porc_logros[]=new int[200] ;
         int cantLogros=0;
            try {
-             ConexionBD cone4= new ConexionBD();
+             ConnectionDB cone4= new ConnectionDB();
         
-            ResultSet rs = cone4.consultaBD("select a.ID_ACHIEVEMENT, a.PORCENTAGE,a.DESCRIPTION ,a.TYPE_ACHIEVEMENTS  from achievement as a WHERE  ID_SUBJECT=(select ID_SUBJECT from subject "
+            ResultSet rs = cone4.queryDB("select a.ID_ACHIEVEMENT, a.PORCENTAGE,a.DESCRIPTION ,a.TYPE_ACHIEVEMENTS  from achievement as a WHERE  ID_SUBJECT=(select ID_SUBJECT from subject "
                     + "where NAME_SUBJECT='"+cboCodeSubjects.getSelectedItem()+"')"+
              "AND ID_PERIOD=(select ID_PERIOD from period WHERE NAME_PERIOD='"+cboNamePeriod.getSelectedItem()+"')");
             //
@@ -151,7 +150,7 @@ public NotesXSubjects() {
         
         modelo = new DefaultTableModel(null,titulos);
         String fila[] = new String[column];
-        ConexionBD cone2= new ConexionBD();
+        ConnectionDB cone2= new ConnectionDB();
         
         String dato=cboCodeCourse.getSelectedItem().toString();
         String dividido[]=dato.split(" - ");
@@ -159,7 +158,7 @@ public NotesXSubjects() {
    
        
         try {
-            ResultSet rs = cone2.consultaBD("select * from student inner join person ON "
+            ResultSet rs = cone2.queryDB("select * from student inner join person ON "
                     + "student.ID_PERSON=person.ID_PERSON where student.ID_COURSE="+idCourse+" AND CONCAT(NAME) LIKE '%"+valor+"%'");
             while (rs.next()) {
                 
@@ -168,9 +167,9 @@ public NotesXSubjects() {
                 double prom=0;
                 for (int i = 0; i < cantLogros; i++) {
                     
-            ConexionBD cone3= new ConexionBD();
+            ConnectionDB cone3= new ConnectionDB();
         
-            ResultSet rs1 = cone3.consultaBD("select GRADE FROM gradesxachievements where ID_STUDENT="+student
+            ResultSet rs1 = cone3.queryDB("select GRADE FROM gradesxachievements where ID_STUDENT="+student
                     + " AND ID_ACHIEVEMENT="+id_logros[i]);
                     if(rs1.next()){
                         fila[i+1] = rs1.getString("GRADE");
