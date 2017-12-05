@@ -1,6 +1,7 @@
 package Interfaces;
 
 import Resources.ConnectionDB;
+import java.awt.Toolkit;
 import java.beans.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,11 +13,15 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
 
         ConnectionDB cone;
+       
 
     public Login() { 
-    
+        
         initComponents();
         cone = new ConnectionDB();
+        setLocationRelativeTo(null);
+        
+        setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/Img/icono.png")));
         
     }
     
@@ -36,8 +41,8 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setLocation(new java.awt.Point(400, 200));
         setUndecorated(true);
+        setPreferredSize(new java.awt.Dimension(490, 400));
         setResizable(false);
 
         jLabel1.setText("USUARIO");
@@ -212,9 +217,9 @@ public class Login extends javax.swing.JFrame {
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
          dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
-
+@SuppressWarnings("unchecked")
     public static void main(String args[]) {
-
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);

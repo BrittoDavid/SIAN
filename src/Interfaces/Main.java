@@ -1,9 +1,14 @@
 package Interfaces;
 
 import Interfaces.Background;
+import static Interfaces.Login.main;
+import static Interfaces.Main.main;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Main extends javax.swing.JFrame {
@@ -22,10 +27,15 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
-
+        cerrar();
+        
+        /*Linea de codigo para que la aplicacion aparezca en toda la pantalla*/
         this.setExtendedState(MAXIMIZED_BOTH);
+        
+        /*llamasmo la imagen de la clase Fondo*/
         cargarImagen(escritorioAdmin, foto);
 
+        /*Condiciones de las ventanas que pueden ver los usuarios segun su rol*/
         if (opcion == 5) {
             JOptionPane.showMessageDialog(null, "Usted no tiene autorizacion para entrar");
             System.exit(0);
@@ -80,6 +90,7 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+    /*Metodo para llamar la clase Fondo*/
     public void cargarImagen(javax.swing.JDesktopPane jDeskp, InputStream fileImagen) {
         try {
             BufferedImage image = ImageIO.read(fileImagen);
@@ -88,7 +99,31 @@ public class Main extends javax.swing.JFrame {
             System.out.println("Imagen no disponible");
         }
     }
+    
+    /*Metodo para cerrar la interfaces principal*/
+    public void cerrar(){
+        try {
+            this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e){
+                    confirmarSalida();
+                }
+            });
+        } catch (Exception e) {
+        }
+    }
+    
+    /*Metodo de mensaje de despedida al momento de cerrar*/
+    public void confirmarSalida(){
+        int confirm = JOptionPane.showConfirmDialog(rootPane, "Seguro que desea salir?");
+        if (confirm == 0) {
+            JOptionPane.showMessageDialog(null, "Gracias por su visita,lo esperamos pronto","Gracias",JOptionPane.INFORMATION_MESSAGE);
+            Login salir = new Login();
+            salir.setVisible(true);
+            dispose();
+        }
 
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -106,13 +141,10 @@ public class Main extends javax.swing.JFrame {
         gestReporte = new javax.swing.JMenuItem();
         NxM_docente = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Principal");
         setFocusTraversalPolicyProvider(true);
-        setLocation(new java.awt.Point(250, 250));
-        setUndecorated(true);
 
         javax.swing.GroupLayout escritorioAdminLayout = new javax.swing.GroupLayout(escritorioAdmin);
         escritorioAdmin.setLayout(escritorioAdminLayout);
@@ -174,40 +206,21 @@ public class Main extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu1);
 
-        jMenu4.setText("Salir");
-        jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jMenu4MousePressed(evt);
-            }
-        });
-        jMenuBar1.add(jMenu4);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(escritorioAdmin)
+            .addComponent(escritorioAdmin, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(escritorioAdmin)
+            .addComponent(escritorioAdmin, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jMenu4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MousePressed
-        int confirm = JOptionPane.showConfirmDialog(rootPane, "Seguro que desea salir?");
-        if (confirm == 0) {
-            JOptionPane.showMessageDialog(rootPane, "Bye");
-            Login salir = new Login();
-            salir.setVisible(true);
-            dispose();
-        }
-
-    }//GEN-LAST:event_jMenu4MousePressed
 
     private void gestNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestNotaActionPerformed
         // TODO add your handling code here:
@@ -225,14 +238,17 @@ public class Main extends javax.swing.JFrame {
         
        
     }//GEN-LAST:event_jMenu1MousePressed
-
+@SuppressWarnings("unchecked")
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
+             
             }
         });
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -248,7 +264,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem gestReporte;
     private javax.swing.JMenuItem gestRoles;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     // End of variables declaration//GEN-END:variables
 }
