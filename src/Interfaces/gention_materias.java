@@ -23,8 +23,9 @@ public class gention_materias extends javax.swing.JInternalFrame {
     ResultSet rs;
     ConnectionDB BS;
     DefaultTableModel modelo;
+
     public gention_materias() {
-        
+
         JFrame.setDefaultLookAndFeelDecorated(true);
         SubstanceLookAndFeel.setSkin("org.jvnet.substance.skin.BusinessBlackSteelSkin");
         SubstanceLookAndFeel.setCurrentTheme("org.jvnet.substance.theme.SubstanceAquaTheme");
@@ -33,6 +34,8 @@ public class gention_materias extends javax.swing.JInternalFrame {
         txt_cod_mat.setEditable(false);
         this.setSize(515, 543);
         this.btn_crea.putClientProperty(SubstanceLookAndFeel.BUTTON_SHAPER_PROPERTY, new StandardButtonShaper());
+        this.btn_Act.putClientProperty(SubstanceLookAndFeel.BUTTON_SHAPER_PROPERTY, new StandardButtonShaper());
+        btn_Act.setVisible(false);
         loadAchievement();
         loadTable2();
         if (Login.lenguaje == 1) {
@@ -41,6 +44,8 @@ public class gention_materias extends javax.swing.JInternalFrame {
             jLabel3.setText("NAME OF MATTER");
             jLabel4.setText("DESCRIPTION");
             btn_crea.setText("CREATE");
+            btn_Act.setText("UPDATE");
+            REMOVE.setText("REMOVE");
         }
     }
 
@@ -48,8 +53,12 @@ public class gention_materias extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        REMOVE = new javax.swing.JMenuItem();
+        UPDATE = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btn_Act = new javax.swing.JButton();
         btn_crea = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_mat = new javax.swing.JTable();
@@ -62,6 +71,22 @@ public class gention_materias extends javax.swing.JInternalFrame {
         txa_des = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+
+        REMOVE.setText("ELIMINAR");
+        REMOVE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                REMOVEActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(REMOVE);
+
+        UPDATE.setText("ACTUALIZAR");
+        UPDATE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UPDATEActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(UPDATE);
 
         setClosable(true);
         setIconifiable(true);
@@ -96,6 +121,15 @@ public class gention_materias extends javax.swing.JInternalFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 533, 89);
 
+        btn_Act.setText("ACTUALIZAR");
+        btn_Act.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ActActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_Act);
+        btn_Act.setBounds(90, 460, 330, 47);
+
         btn_crea.setText("CREAR");
         btn_crea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,6 +147,7 @@ public class gention_materias extends javax.swing.JInternalFrame {
 
             }
         ));
+        tbl_mat.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(tbl_mat);
 
         getContentPane().add(jScrollPane1);
@@ -179,7 +214,7 @@ public class CustomPanel extends JPanel {
             super.paint(g);
         }
     }
-    static int num=0;
+    static int num = 0;
     private void btn_creaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_creaActionPerformed
         int contador = 0;
         int cont = txt_nom_mat.getText().length();
@@ -224,19 +259,65 @@ public class CustomPanel extends JPanel {
             }
             if (totalCampo2 > totalCampo) {
                 JOptionPane.showMessageDialog(this, "creado correctamente");
-                num+=1;
+                num += 1;
                 reiniciar();
             } else {
                 JOptionPane.showMessageDialog(this, "creado incorrectamente");
             }
 
         }
-       loadTable2();        
+        loadTable2();
     }//GEN-LAST:event_btn_creaActionPerformed
 
     private void txt_cod_matActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cod_matActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_cod_matActionPerformed
+
+    private void REMOVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REMOVEActionPerformed
+        if (tbl_mat.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Debes seleccionar una fila");
+
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(rootPane, "Desea eliminar el registro?");
+            if (confirm == 0) {
+                String subjectCode = (String) modelo.getValueAt(tbl_mat.getSelectedRow(), 0);
+                BS.updateDB("DELETE FROM subject WHERE ID_SUBJECT=" + subjectCode);
+                loadTable2();
+            }
+        }
+    }//GEN-LAST:event_REMOVEActionPerformed
+
+    private void UPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UPDATEActionPerformed
+        if (tbl_mat.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Debes seleccionar una fila");
+
+        } else {
+            String subjectCode = (String) modelo.getValueAt(tbl_mat.getSelectedRow(),0);
+            btn_crea.setVisible(false);
+            btn_Act.setVisible(true);
+            try {
+                rs = BS.queryDB("SELECT * FROM subject WHERE ID_SUBJECT=" + subjectCode);
+                if (rs.next()) {
+                    txt_cod_mat.setText((rs.getInt("ID_SUBJECT")+ ""));
+                    txt_nom_mat.setText((rs.getString("NAME_SUBJECT")));
+                    txa_des.setText((rs.getString("DESCRIPTION")));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(gention_materias.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            loadTable2();
+        }
+
+    }//GEN-LAST:event_UPDATEActionPerformed
+
+    private void btn_ActActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ActActionPerformed
+            int codigo;
+            codigo = Integer.parseInt(txt_cod_mat.getText());
+            String materia = txt_nom_mat.getText();
+            String descripcion = txa_des.getText();
+            
+            reiniciar();
+    }//GEN-LAST:event_btn_ActActionPerformed
 
     public void loadAchievement() {
         try {
@@ -248,34 +329,33 @@ public class CustomPanel extends JPanel {
             Logger.getLogger(gention_materias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void loadTable2(){
-    String titulos[] = new String[3];
-    if (Login.lenguaje == 1) {
+
+    public void loadTable2() {
+        String titulos[] = new String[3];
+        if (Login.lenguaje == 1) {
             titulos[0] = "CODE";
             titulos[1] = "MATTER";
             titulos[2] = "DESCRIPTION";
-         }else{
-            titulos[0]= "CODIGO";
-            titulos[1]= "MATERIA";
-            titulos[2]= "DESCRIPCION";
+        } else {
+            titulos[0] = "CODIGO";
+            titulos[1] = "MATERIA";
+            titulos[2] = "DESCRIPCION";
         }
-    modelo = new DefaultTableModel(null, titulos);
+        modelo = new DefaultTableModel(null, titulos);
 
-
-    
-    String fila[] = new String[3];
+        String fila[] = new String[3];
         try {
-            rs= BS.queryDB("SELECT * FROM subject");
-            while (rs.next()){
-                fila[0]= rs.getString("ID_SUBJECT");
-                fila[1]= rs.getString("NAME_SUBJECT");
-                fila[2]= rs.getString("DESCRIPTION");
+            rs = BS.queryDB("SELECT * FROM subject");
+            while (rs.next()) {
+                fila[0] = rs.getString("ID_SUBJECT");
+                fila[1] = rs.getString("NAME_SUBJECT");
+                fila[2] = rs.getString("DESCRIPTION");
                 modelo.addRow(fila);
             }
-            
+
             tbl_mat.setModel(modelo);
         } catch (Exception ex) {
-            System.out.println("ERROR"+ex);
+            System.out.println("ERROR" + ex);
         }
     }
 
@@ -285,6 +365,9 @@ public class CustomPanel extends JPanel {
         txa_des.setText("");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem REMOVE;
+    private javax.swing.JMenuItem UPDATE;
+    private javax.swing.JButton btn_Act;
     private javax.swing.JButton btn_crea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -293,6 +376,7 @@ public class CustomPanel extends JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tbl_mat;

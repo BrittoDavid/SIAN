@@ -63,9 +63,13 @@ public class gestion_logros extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        UPDATE = new javax.swing.JMenuItem();
+        REMOVE = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btn_cre = new javax.swing.JButton();
+        btn_Act = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tbl_log = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -83,6 +87,22 @@ public class gestion_logros extends javax.swing.JInternalFrame {
         lbl_mat = new javax.swing.JLabel();
         lbl_des = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+
+        UPDATE.setText("ACTUALIZAR");
+        UPDATE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UPDATEActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(UPDATE);
+
+        REMOVE.setText("ELIMINAR");
+        REMOVE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                REMOVEActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(REMOVE);
 
         setClosable(true);
         setIconifiable(true);
@@ -124,7 +144,17 @@ public class gestion_logros extends javax.swing.JInternalFrame {
                 btn_creActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_cre, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 540, 350, 50));
+        getContentPane().add(btn_cre, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 350, 50));
+
+        btn_Act.setBackground(new java.awt.Color(140, 217, 238));
+        btn_Act.setText("ACTUALIZAR");
+        btn_Act.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        btn_Act.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ActActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_Act, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 350, 50));
 
         tbl_log.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -134,6 +164,7 @@ public class gestion_logros extends javax.swing.JInternalFrame {
 
             }
         ));
+        tbl_log.setComponentPopupMenu(jPopupMenu1);
         jScrollPane3.setViewportView(tbl_log);
 
         getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 570, 140));
@@ -325,8 +356,50 @@ final Runnable gestionarMateria = new Runnable() {
     }//GEN-LAST:event_btn_creActionPerformed
 
     private void cmb_id_perActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_id_perActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_cmb_id_perActionPerformed
+
+    private void REMOVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REMOVEActionPerformed
+                if (tbl_log.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Debes seleccionar una fila");
+
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(rootPane, "Desea eliminar el registro?");
+            if (confirm == 0) {
+                String achievementCode = (String) modelo.getValueAt(tbl_log.getSelectedRow(), 0);
+                BS.updateDB("DELETE FROM achievement WHERE ID_ACHIEVEMENT=" + achievementCode);
+                loadtable();
+            }
+        }
+    }//GEN-LAST:event_REMOVEActionPerformed
+
+    private void UPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UPDATEActionPerformed
+        if (tbl_log.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Debes seleccionar una fila");
+
+        } else {
+            String achievementCode = (String) modelo.getValueAt(tbl_log.getSelectedRow(), 0);
+            btn_cre.setVisible(false);
+            btn_Act.setVisible(true);
+            try {
+                rs = BS.queryDB("SELECT * FROM achievement WHERE ID_ACHIEVEMENT=" + achievementCode);
+                if (rs.next()) {
+                    txt_id_log.setText((rs.getInt("ID_ACHIEVEMENT") + ""));
+                    spn_por.setValue((rs.getInt("PORCENTAGE") + ""));
+                    txt_log.setText((rs.getString("TYPE_ACHIEVEMENTS")));
+                    txa_des.setText((rs.getString("DESCRIPTION")));
+                
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(gention_materias.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            loadtable();
+        }
+    }//GEN-LAST:event_UPDATEActionPerformed
+
+    private void btn_ActActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ActActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_ActActionPerformed
 
     public void loadAchievement() {
         try {
@@ -396,7 +469,7 @@ final Runnable gestionarMateria = new Runnable() {
         try {
             rs = BS.queryDB("SELECT NAME_PERIOD FROM period");
             if (Login.lenguaje == 1) {
-                modeloCombo1.addElement("period");
+                modeloCombo1.addElement("PERIOD");
             } else {
                 modeloCombo1.addElement("PERIODO");
             }
@@ -419,6 +492,9 @@ final Runnable gestionarMateria = new Runnable() {
         txa_des.setText("");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem REMOVE;
+    private javax.swing.JMenuItem UPDATE;
+    private javax.swing.JButton btn_Act;
     private javax.swing.JButton btn_cre;
     private javax.swing.JComboBox cmb_id_mat;
     private javax.swing.JComboBox cmb_id_per;
@@ -426,6 +502,7 @@ final Runnable gestionarMateria = new Runnable() {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbl_des;
