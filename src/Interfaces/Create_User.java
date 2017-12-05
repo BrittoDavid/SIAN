@@ -809,10 +809,8 @@ public class Create_User extends javax.swing.JInternalFrame {
         
         ConnectionBD coneuser = new ConnectionBD();
         
-        System.out.println("INSERT INTO users VALUES (null," + Id_Person + ", '" + User + "' , '" + 
-               Pass + "' ," + Role + "," + State + ")");
-        coneuser.updateDB("INSERT INTO users VALUES (null," + Id_Person + ", '" + User + "' , '" + 
-               Pass + "' ," + Role + "," + State + ")");
+        coneuser.updateDB("INSERT INTO users VALUES (null," + Id_Person + ", 'null' , 'null' ," + Role + "," + State + ")");
+
         
         ConnectionBD coneCourse = new ConnectionBD();
         coneCourse.updateDB("INSER INTO student VALUES (null," + Id_Person + "," + Cod_Curse + "," + Id_Attendant + ")");
