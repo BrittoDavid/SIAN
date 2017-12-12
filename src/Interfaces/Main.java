@@ -111,7 +111,6 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Principal");
         setFocusTraversalPolicyProvider(true);
-        setLocation(new java.awt.Point(250, 250));
         setUndecorated(true);
 
         javax.swing.GroupLayout escritorioAdminLayout = new javax.swing.GroupLayout(escritorioAdmin);
@@ -131,11 +130,6 @@ public class Main extends javax.swing.JFrame {
         IngresarUsuarios.add(gestActi);
 
         gestNota.setText("Notas");
-        gestNota.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gestNotaActionPerformed(evt);
-            }
-        });
         IngresarUsuarios.add(gestNota);
 
         gestCurso.setText("Curso");
@@ -208,10 +202,6 @@ public class Main extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jMenu4MousePressed
-
-    private void gestNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestNotaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_gestNotaActionPerformed
 
     private void NxM_DocenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NxM_DocenteActionPerformed
         // TODO add your handling code here:
